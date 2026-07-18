@@ -48,7 +48,7 @@ Query params:
 Example:
 
 ```bash
-curl "http://127.0.0.1:5000/api/home/recommendations/?category=电视剧"
+curl "http://127.0.0.1:8000/api/home/recommendations/?category=电视剧"
 ```
 
 ## MongoDB JSON Reference

@@ -355,6 +355,23 @@ a {
     linear-gradient(135deg, #252525 0%, #151515 46%, #080808 100%);
 }
 
+.banner-loading {
+  display: flex;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 70% 24%, rgba(0, 204, 76, 0.14), transparent 32%),
+    linear-gradient(135deg, #252525 0%, #151515 46%, #080808 100%);
+  color: #d8d8d8;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.banner-loading.is-error {
+  color: #ffb4b4;
+}
+
 .banner-poster {
   position: absolute;
   inset: 0;
@@ -575,6 +592,11 @@ a {
   background: #232323;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
   transform: translateY(-4px);
+}
+
+.recommend-card.is-loading {
+  pointer-events: none;
+  opacity: 0.76;
 }
 
 .recommend-poster {

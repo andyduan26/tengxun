@@ -4,66 +4,72 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 
 
-const banners = [
-  {
-    title: "仙逆",
-    tag: "腾讯视频 全网独播",
-    highlight: "青宜：只此一次，却真香！",
-    meta: "热血修仙 / 国漫高燃 / 每周更新",
-    image:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=1800&q=85",
-  },
-  {
-    title: "百花杀",
-    tag: "今日上新",
-    highlight: "乱世花影，一念成局",
-    meta: "古装悬疑 / 情感博弈 / 高清臻彩",
-    image:
-      "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1800&q=85",
-  },
-  {
-    title: "庆余年",
-    tag: "热播推荐",
-    highlight: "风云再起，少年入局",
-    meta: "古装权谋 / 爽感剧情 / 会员抢先看",
-    image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85",
-  },
-  {
-    title: "长相思",
-    tag: "高分剧集",
-    highlight: "山海有期，相思无尽",
-    meta: "东方幻想 / 情感名场面 / 沉浸观看",
-    image:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1800&q=85",
-  },
-];
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
 
-const recommendations = [
-  {
-    title: "《仙逆》",
-    tags: "动漫 东方玄幻 东方仙侠 逆袭",
-    quote: "青宜：只此一次，却真香！",
-    image:
-      "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=900&q=85",
-  },
-  {
-    title: "《沈腾小品YYDS：笑到停不下来~》",
-    tags: "综艺 沈腾 晚会 喜剧表演",
-    quote: "沈腾小品YYDS：笑到停不下来~",
-    image:
-      "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?auto=format&fit=crop&w=900&q=85",
-  },
-];
-
+const banners = ref([]);
+const recommendations = ref([]);
 const activeIndex = ref(0);
 const isBannerFading = ref(false);
+const isLoading = ref(true);
+const loadError = ref("");
 let timer = null;
 
-const activeBanner = computed(() => banners[activeIndex.value]);
+const activeBanner = computed(() => banners.value[activeIndex.value] || null);
+
+function normalizeVideoProject(item) {
+  return {
+    id: item.id,
+    title: item.title,
+    tag: item.category,
+    highlight: item.description,
+    meta: item.is_vip ? "VIP会员 · 热门推荐" : "免费观看 · 热门推荐",
+    image: item.cover_image_url,
+    thumbnail: item.thumbnail_url || item.cover_image_url,
+    category: item.category,
+    isVip: item.is_vip,
+    sortWeight: item.sort_weight,
+  };
+}
+
+async function fetchJson(path) {
+  const response = await fetch(`${API_BASE_URL}${path}`);
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
+  }
+
+  const payload = await response.json();
+  if (!payload.success) {
+    throw new Error(payload.message || "Request failed");
+  }
+
+  return payload.data;
+}
+
+async function loadHomeData() {
+  isLoading.value = true;
+  loadError.value = "";
+
+  try {
+    const [bannerData, recommendationData] = await Promise.all([
+      fetchJson("/home/banners/"),
+      fetchJson("/home/recommendations/?category=全部"),
+    ]);
+
+    banners.value = bannerData.map(normalizeVideoProject);
+    recommendations.value = recommendationData.map(normalizeVideoProject);
+    activeIndex.value = 0;
+
+    restartTimer();
+  } catch (error) {
+    loadError.value = "首页数据加载失败，请确认后端服务已启动。";
+    stopTimer();
+  } finally {
+    isLoading.value = false;
+  }
+}
 
 function setActiveBanner(index) {
-  if (index === activeIndex.value || isBannerFading.value) {
+  if (index === activeIndex.value || isBannerFading.value || banners.value.length === 0) {
     return;
   }
 
@@ -76,11 +82,18 @@ function setActiveBanner(index) {
 }
 
 function nextBanner() {
-  setActiveBanner((activeIndex.value + 1) % banners.length);
+  if (banners.value.length <= 1) {
+    return;
+  }
+
+  setActiveBanner((activeIndex.value + 1) % banners.value.length);
 }
 
 function startTimer() {
-  timer = window.setInterval(nextBanner, 5000);
+  stopTimer();
+  if (banners.value.length > 1) {
+    timer = window.setInterval(nextBanner, 5000);
+  }
 }
 
 function stopTimer() {
@@ -95,7 +108,7 @@ function restartTimer() {
   startTimer();
 }
 
-onMounted(startTimer);
+onMounted(loadHomeData);
 onBeforeUnmount(stopTimer);
 </script>
 
@@ -103,69 +116,90 @@ onBeforeUnmount(stopTimer);
   <AppLayout>
     <div class="home-page">
       <section class="banner" aria-label="首页视频轮播">
-        <div :class="['banner-stage', { 'is-fading': isBannerFading }]">
-          <div
-            class="banner-poster"
-            :style="{ '--banner-image': `url(${activeBanner.image})` }"
-          ></div>
+        <div v-if="isLoading" class="banner-loading">
+          <span>正在加载首页轮播...</span>
+        </div>
 
-          <div class="banner-copy">
-            <span class="banner-tag">{{ activeBanner.tag }}</span>
-            <h1 class="banner-title">{{ activeBanner.title }}</h1>
-            <p class="banner-desc">{{ activeBanner.highlight }}</p>
-            <p class="banner-meta">{{ activeBanner.meta }}</p>
+        <div v-else-if="loadError" class="banner-loading is-error">
+          <span>{{ loadError }}</span>
+        </div>
 
-            <div class="banner-actions">
-              <button class="banner-play" type="button">立即播放</button>
-              <button class="banner-secondary" type="button">加入片单</button>
+        <template v-else-if="activeBanner">
+          <div :class="['banner-stage', { 'is-fading': isBannerFading }]">
+            <div
+              class="banner-poster"
+              :style="{ '--banner-image': `url(${activeBanner.image})` }"
+            ></div>
+
+            <div class="banner-copy">
+              <span class="banner-tag">{{ activeBanner.tag }}</span>
+              <h1 class="banner-title">{{ activeBanner.title }}</h1>
+              <p class="banner-desc">{{ activeBanner.highlight }}</p>
+              <p class="banner-meta">{{ activeBanner.meta }}</p>
+
+              <div class="banner-actions">
+                <button class="banner-play" type="button">立即播放</button>
+                <button class="banner-secondary" type="button">加入片单</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="banner-thumbs" aria-label="轮播缩略图">
-          <button
-            v-for="(item, index) in banners"
-            :key="item.title"
-            :class="['banner-thumb', { 'is-active': index === activeIndex }]"
-            type="button"
-            @click="setActiveBanner(index)"
-            @mouseenter="setActiveBanner(index)"
-          >
-            <span
-              class="banner-thumb-cover"
-              :style="{ '--thumb-image': `url(${item.image})` }"
-            ></span>
-            <span>
-              <span class="banner-thumb-title">{{ item.title }}</span>
-              <span class="banner-thumb-desc">{{ item.highlight }}</span>
-            </span>
-            <span class="banner-progress"></span>
-          </button>
-        </div>
+          <div class="banner-thumbs" aria-label="轮播缩略图">
+            <button
+              v-for="(item, index) in banners"
+              :key="item.id"
+              :class="['banner-thumb', { 'is-active': index === activeIndex }]"
+              type="button"
+              @click="setActiveBanner(index)"
+              @mouseenter="setActiveBanner(index)"
+            >
+              <span
+                class="banner-thumb-cover"
+                :style="{ '--thumb-image': `url(${item.thumbnail})` }"
+              ></span>
+              <span>
+                <span class="banner-thumb-title">{{ item.title }}</span>
+                <span class="banner-thumb-desc">{{ item.highlight }}</span>
+              </span>
+              <span class="banner-progress"></span>
+            </button>
+          </div>
+        </template>
       </section>
 
       <section class="recommend-section" aria-label="为你推荐">
         <div class="recommend-heading">
           <h2>为你推荐</h2>
-          <span>正在热播 · 高分内容 · 会员精选</span>
+          <span>接口数据 · 分类筛选 · 动态渲染</span>
         </div>
 
-        <div class="recommend-grid">
+        <div v-if="isLoading" class="recommend-grid">
+          <article v-for="index in 2" :key="index" class="recommend-card is-loading">
+            <div class="recommend-poster"></div>
+            <div class="recommend-info">
+              <h3>加载中...</h3>
+              <p class="recommend-tags">正在请求后端内容</p>
+              <p class="recommend-quote">“请稍候”</p>
+            </div>
+          </article>
+        </div>
+
+        <div v-else class="recommend-grid">
           <article
             v-for="item in recommendations"
-            :key="item.title"
+            :key="item.id"
             class="recommend-card"
           >
             <div
               class="recommend-poster"
-              :style="{ '--poster-image': `url(${item.image})` }"
+              :style="{ '--poster-image': `url(${item.thumbnail})` }"
             ></div>
 
             <div class="recommend-info">
               <button class="recommend-follow" type="button">Ξ+追</button>
-              <h3>{{ item.title }}</h3>
-              <p class="recommend-tags">{{ item.tags }}</p>
-              <p class="recommend-quote">“{{ item.quote }}”</p>
+              <h3>《{{ item.title }}》</h3>
+              <p class="recommend-tags">{{ item.category }} {{ item.meta }}</p>
+              <p class="recommend-quote">“{{ item.highlight }}”</p>
             </div>
           </article>
         </div>
