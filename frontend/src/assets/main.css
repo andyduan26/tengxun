@@ -600,12 +600,65 @@ a {
 }
 
 .recommend-poster {
+  position: relative;
+  overflow: hidden;
   min-height: 210px;
   border-radius: 10px;
   background-color: #2a2a2a;
   background-image: var(--poster-image);
   background-position: center;
   background-size: cover;
+}
+
+.recommend-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  height: 26px;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+.recommend-badge.is-vip {
+  background: linear-gradient(135deg, #f8d88a, #b9761e);
+  color: #2a1400;
+}
+
+.recommend-badge.is-exclusive {
+  background: linear-gradient(135deg, #ff7a45, #e33b16);
+}
+
+.recommend-badge.is-free {
+  background: linear-gradient(135deg, #00cc4c, #058a3a);
+  color: #031609;
+}
+
+.recommend-badge.is-default {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.recommend-status {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  min-height: 38px;
+  align-items: end;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0));
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 0 12px 10px;
 }
 
 .recommend-info {
@@ -635,7 +688,7 @@ a {
 
 .recommend-quote {
   margin: 22px 0 0;
-  color: #00cc4c;
+  color: #f1d08a;
   font-size: 17px;
   font-weight: 800;
   line-height: 1.65;

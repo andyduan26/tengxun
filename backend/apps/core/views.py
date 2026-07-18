@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import VideoProject
-from .serializers import VideoProjectSerializer
+from apps.video.models import VideoProject
+from apps.video.serializers import VideoProjectSerializer
 
 
 class HealthCheckAPIView(APIView):
@@ -27,7 +27,7 @@ class HomeBannerListAPIView(APIView):
     permission_classes = []
 
     def get(self, request):
-        projects = VideoProject.objects.all()[:5]
+        projects = VideoProject.objects.filter(is_banner=True)[:5]
         serializer = VideoProjectSerializer(projects, many=True)
         return Response(
             {

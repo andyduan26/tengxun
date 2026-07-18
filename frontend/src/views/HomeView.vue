@@ -21,14 +21,29 @@ function normalizeVideoProject(item) {
     id: item.id,
     title: item.title,
     tag: item.category,
-    highlight: item.description,
-    meta: item.is_vip ? "VIP会员 · 热门推荐" : "免费观看 · 热门推荐",
-    image: item.cover_image_url,
-    thumbnail: item.thumbnail_url || item.cover_image_url,
+    subtitle: item.subtitle,
+    tags: item.tags,
+    image: item.cover_image,
+    thumbnail: item.cover_image,
     category: item.category,
-    isVip: item.is_vip,
+    badgeText: item.badge_text,
+    statusText: item.status_text,
+    isBanner: item.is_banner,
     sortWeight: item.sort_weight,
   };
+}
+
+function badgeClass(item) {
+  if (item.badgeText === "VIP") {
+    return "is-vip";
+  }
+  if (item.badgeText === "独播") {
+    return "is-exclusive";
+  }
+  if (item.badgeText === "限免中") {
+    return "is-free";
+  }
+  return "is-default";
 }
 
 async function fetchJson(path) {
@@ -134,8 +149,8 @@ onBeforeUnmount(stopTimer);
             <div class="banner-copy">
               <span class="banner-tag">{{ activeBanner.tag }}</span>
               <h1 class="banner-title">{{ activeBanner.title }}</h1>
-              <p class="banner-desc">{{ activeBanner.highlight }}</p>
-              <p class="banner-meta">{{ activeBanner.meta }}</p>
+              <p class="banner-desc">{{ activeBanner.subtitle }}</p>
+              <p class="banner-meta">{{ activeBanner.tags }} · {{ activeBanner.statusText }}</p>
 
               <div class="banner-actions">
                 <button class="banner-play" type="button">立即播放</button>
@@ -159,7 +174,7 @@ onBeforeUnmount(stopTimer);
               ></span>
               <span>
                 <span class="banner-thumb-title">{{ item.title }}</span>
-                <span class="banner-thumb-desc">{{ item.highlight }}</span>
+                <span class="banner-thumb-desc">{{ item.subtitle }}</span>
               </span>
               <span class="banner-progress"></span>
             </button>
@@ -193,13 +208,18 @@ onBeforeUnmount(stopTimer);
             <div
               class="recommend-poster"
               :style="{ '--poster-image': `url(${item.thumbnail})` }"
-            ></div>
+            >
+              <span v-if="item.badgeText" :class="['recommend-badge', badgeClass(item)]">
+                {{ item.badgeText }}
+              </span>
+              <span class="recommend-status">{{ item.statusText }}</span>
+            </div>
 
             <div class="recommend-info">
               <button class="recommend-follow" type="button">Ξ+追</button>
               <h3>《{{ item.title }}》</h3>
-              <p class="recommend-tags">{{ item.category }} {{ item.meta }}</p>
-              <p class="recommend-quote">“{{ item.highlight }}”</p>
+              <p class="recommend-tags">{{ item.category }} {{ item.tags }}</p>
+              <p class="recommend-quote">“{{ item.subtitle }}”</p>
             </div>
           </article>
         </div>

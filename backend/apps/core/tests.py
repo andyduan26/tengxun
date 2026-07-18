@@ -2,8 +2,9 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib import admin
 
-from .admin import VideoProjectAdmin
-from .models import VideoProject
+from .admin import VideoProjectAdmin as CoreVideoProjectAdmin
+from .models import VideoProject as CoreVideoProject
+from apps.video.models import VideoProject
 
 
 class HealthCheckAPITests(TestCase):
@@ -27,21 +28,23 @@ class HealthCheckAPITests(TestCase):
 class HomeVideoProjectAPITests(TestCase):
     def setUp(self):
         categories = [
-            ("仙逆", "动漫", 100),
-            ("脱口秀3", "综艺", 90),
-            ("繁花", "电视剧", 80),
-            ("流浪地球", "电影", 70),
-            ("庆余年", "电视剧", 60),
-            ("长相思", "电视剧", 50),
+            ("仙逆", "动漫", True, 100),
+            ("脱口秀3", "综艺", True, 90),
+            ("繁花", "电视剧", True, 80),
+            ("流浪地球", "电影", True, 70),
+            ("庆余年", "电视剧", True, 60),
+            ("长相思", "电视剧", False, 50),
         ]
-        for title, category, sort_weight in categories:
+        for title, category, is_banner, sort_weight in categories:
             VideoProject.objects.create(
                 title=title,
-                description=f"{title} 看点",
-                cover_image_url=f"https://example.com/{title}/cover.jpg",
-                thumbnail_url=f"https://example.com/{title}/thumb.jpg",
+                subtitle=f"{title} 看点",
                 category=category,
-                is_vip=sort_weight >= 80,
+                tags=f"{category} 热门 推荐",
+                cover_image=f"https://example.com/{title}/cover.jpg",
+                badge_text="VIP" if sort_weight >= 80 else "",
+                status_text="更新中",
+                is_banner=is_banner,
                 sort_weight=sort_weight,
             )
 
@@ -56,6 +59,9 @@ class HomeVideoProjectAPITests(TestCase):
             [item["title"] for item in payload["data"]],
             ["仙逆", "脱口秀3", "繁花", "流浪地球", "庆余年"],
         )
+        self.assertIn("subtitle", payload["data"][0])
+        self.assertIn("badge_text", payload["data"][0])
+        self.assertIn("status_text", payload["data"][0])
 
     def test_home_recommendations_filters_by_category(self):
         response = self.client.get(reverse("home-recommendations"), {"category": "电视剧"})
@@ -77,9 +83,9 @@ class HomeVideoProjectAPITests(TestCase):
 
 class VideoProjectAdminTests(TestCase):
     def test_video_project_admin_has_management_features(self):
-        model_admin = admin.site._registry[VideoProject]
+        model_admin = admin.site._registry[CoreVideoProject]
 
-        self.assertIsInstance(model_admin, VideoProjectAdmin)
+        self.assertIsInstance(model_admin, CoreVideoProjectAdmin)
         self.assertIn("cover_preview", model_admin.readonly_fields)
         self.assertIn("export_as_csv", model_admin.actions)
         self.assertEqual(admin.site.site_header, "腾讯视频内容管理后台")
