@@ -57,17 +57,26 @@ const recommendations = [
 ];
 
 const activeIndex = ref(0);
+const isBannerFading = ref(false);
 let timer = null;
 
 const activeBanner = computed(() => banners[activeIndex.value]);
 
 function setActiveBanner(index) {
-  activeIndex.value = index;
+  if (index === activeIndex.value || isBannerFading.value) {
+    return;
+  }
+
+  isBannerFading.value = true;
+  window.setTimeout(() => {
+    activeIndex.value = index;
+    isBannerFading.value = false;
+  }, 180);
   restartTimer();
 }
 
 function nextBanner() {
-  activeIndex.value = (activeIndex.value + 1) % banners.length;
+  setActiveBanner((activeIndex.value + 1) % banners.length);
 }
 
 function startTimer() {
@@ -94,7 +103,7 @@ onBeforeUnmount(stopTimer);
   <AppLayout>
     <div class="home-page">
       <section class="banner" aria-label="首页视频轮播">
-        <div class="banner-stage">
+        <div :class="['banner-stage', { 'is-fading': isBannerFading }]">
           <div
             class="banner-poster"
             :style="{ '--banner-image': `url(${activeBanner.image})` }"
@@ -120,6 +129,7 @@ onBeforeUnmount(stopTimer);
             :class="['banner-thumb', { 'is-active': index === activeIndex }]"
             type="button"
             @click="setActiveBanner(index)"
+            @mouseenter="setActiveBanner(index)"
           >
             <span
               class="banner-thumb-cover"

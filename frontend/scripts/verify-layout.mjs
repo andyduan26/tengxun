@@ -33,6 +33,11 @@ const assertions = [
   ["recommendation grid is two columns", files.css.includes(".recommend-grid") && files.css.includes("grid-template-columns: repeat(2, minmax(0, 1fr))")],
   ["recommendation cards lift on hover", files.css.includes(".recommend-card:hover") && files.css.includes("translateY(-4px)")],
   ["follow button turns green on hover", files.css.includes(".recommend-follow:hover") && files.css.includes("background: #00cc4c")],
+  ["banner has hover switching", files.home.includes("@mouseenter=\"setActiveBanner(index)\"")],
+  ["banner has fade state", files.home.includes("isBannerFading") && files.home.includes("is-fading")],
+  ["banner auto plays every five seconds", files.home.includes("window.setInterval(nextBanner, 5000)")],
+  ["banner has dark-to-transparent overlay", files.css.includes("linear-gradient(0deg, #121212 0%, rgba(18, 18, 18, 0) 70%)")],
+  ["banner fades poster and copy", files.css.includes(".banner-poster") && files.css.includes("transition: opacity 260ms ease") && files.css.includes(".banner-copy")],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed);

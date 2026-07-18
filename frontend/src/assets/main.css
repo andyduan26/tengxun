@@ -359,6 +359,9 @@ a {
   background-image: var(--banner-image);
   background-position: center;
   background-size: cover;
+  opacity: 1;
+  transition: opacity 260ms ease, transform 420ms ease;
+  transform: scale(1);
 }
 
 .banner-poster::after {
@@ -366,8 +369,13 @@ a {
   inset: 0;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.48) 32%, rgba(0, 0, 0, 0.08) 72%),
-    linear-gradient(0deg, rgba(15, 15, 15, 0.98) 0%, rgba(15, 15, 15, 0.58) 28%, rgba(15, 15, 15, 0) 62%);
+    linear-gradient(0deg, #121212 0%, rgba(18, 18, 18, 0) 70%);
   content: "";
+}
+
+.banner-stage.is-fading .banner-poster {
+  opacity: 0.18;
+  transform: scale(1.015);
 }
 
 .banner-copy {
@@ -376,6 +384,14 @@ a {
   left: 52px;
   z-index: 2;
   max-width: 620px;
+  opacity: 1;
+  transition: opacity 260ms ease, transform 260ms ease;
+  transform: translateY(0);
+}
+
+.banner-stage.is-fading .banner-copy {
+  opacity: 0;
+  transform: translateY(12px);
 }
 
 .banner-tag {
