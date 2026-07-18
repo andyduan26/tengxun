@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "apps.core",
+    "apps.video",
 ]
 
 MIDDLEWARE = [
@@ -95,9 +96,21 @@ SIMPLEUI_ANALYSIS = False
 SIMPLEUI_LOGO = ""
 SIMPLEUI_CONFIG = {
     "system_keep": True,
-    "menu_display": ["核心", "认证和授权"],
+    "menu_display": ["视频内容", "核心", "认证和授权"],
     "dynamic": False,
     "menus": [
+        {
+            "app": "video",
+            "name": "视频内容",
+            "icon": "fas fa-clapperboard",
+            "models": [
+                {
+                    "name": "影视项目",
+                    "icon": "fas fa-film",
+                    "url": "video/videoproject/",
+                }
+            ],
+        },
         {
             "app": "core",
             "name": "内容管理",
