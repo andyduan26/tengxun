@@ -17,6 +17,7 @@ class VideoProject(models.Model):
     category = models.CharField("主分类", max_length=20, choices=CATEGORY_CHOICES)
     tags = models.CharField("细分标签", max_length=200, help_text="用空格隔开，例如：东方玄幻 东方仙侠 逆袭")
     cover_image = models.URLField("横版封面大图 URL", max_length=500)
+    video_file = models.FileField("视频文件", upload_to="videos/", blank=True)
     badge_text = models.CharField("视频卡片角标", max_length=20, blank=True)
     status_text = models.CharField("剧集更新状态", max_length=50)
     is_banner = models.BooleanField("是否顶部轮播", default=False)

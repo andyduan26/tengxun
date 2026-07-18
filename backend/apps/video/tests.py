@@ -13,6 +13,7 @@ class VideoProjectModelAdminTests(TestCase):
             category="动漫",
             tags="东方玄幻 东方仙侠 逆袭",
             cover_image="https://example.com/xian-ni.jpg",
+            video_file="videos/xian-ni.mp4",
             badge_text="独播",
             status_text="更新至149集",
             is_banner=True,
@@ -21,6 +22,7 @@ class VideoProjectModelAdminTests(TestCase):
 
         self.assertEqual(str(project), "仙逆")
         self.assertEqual(project.tags, "东方玄幻 东方仙侠 逆袭")
+        self.assertEqual(project.video_file.name, "videos/xian-ni.mp4")
         self.assertTrue(project.is_banner)
 
     def test_video_project_is_registered_in_admin(self):
@@ -29,6 +31,15 @@ class VideoProjectModelAdminTests(TestCase):
         self.assertIsInstance(model_admin, VideoProjectAdmin)
         self.assertEqual(
             model_admin.list_display,
-            ("title", "category", "is_banner", "badge_text", "status_text", "sort_weight", "created_at"),
+            (
+                "title",
+                "category",
+                "is_banner",
+                "badge_text",
+                "status_text",
+                "has_video_file",
+                "sort_weight",
+                "created_at",
+            ),
         )
         self.assertEqual(model_admin.list_filter, ("category", "is_banner", "badge_text"))
