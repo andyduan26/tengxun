@@ -32,7 +32,7 @@ class HomeBannerListAPIView(APIView):
         if category and category not in ("首页", "全部"):
             projects = projects.filter(category=category)
         projects = projects[:5]
-        serializer = VideoProjectSerializer(projects, many=True)
+        serializer = VideoProjectSerializer(projects, many=True, context={"request": request})
         return Response(
             {
                 "success": True,
@@ -52,7 +52,7 @@ class HomeRecommendationListAPIView(APIView):
         if category and category != "全部":
             projects = projects.filter(category=category)
 
-        serializer = VideoProjectSerializer(projects, many=True)
+        serializer = VideoProjectSerializer(projects, many=True, context={"request": request})
         return Response(
             {
                 "success": True,

@@ -42,6 +42,7 @@ class HomeVideoProjectAPITests(TestCase):
                 category=category,
                 tags=f"{category} 热门 推荐",
                 cover_image=f"https://example.com/{title}/cover.jpg",
+                video_file=f"videos/{title}.mp4",
                 badge_text="VIP" if sort_weight >= 80 else "",
                 status_text="更新中",
                 is_banner=is_banner,
@@ -62,6 +63,8 @@ class HomeVideoProjectAPITests(TestCase):
         self.assertIn("subtitle", payload["data"][0])
         self.assertIn("badge_text", payload["data"][0])
         self.assertIn("status_text", payload["data"][0])
+        self.assertIn("video_file_url", payload["data"][0])
+        self.assertTrue(payload["data"][0]["video_file_url"].endswith("/media/videos/%E4%BB%99%E9%80%86.mp4"))
 
     def test_home_banners_filters_by_category(self):
         response = self.client.get(reverse("home-banners"), {"category": "电影"})

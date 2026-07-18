@@ -732,6 +732,106 @@ a {
   transform: translateY(-1px);
 }
 
+.recommend-play {
+  width: max-content;
+  height: 36px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.recommend-play:hover,
+.recommend-play:focus-visible {
+  background: #00cc4c;
+  color: #06180c;
+}
+
+.video-player-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.video-player-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.video-player-panel {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: #121212;
+  box-shadow: 0 34px 120px rgba(0, 0, 0, 0.58);
+  padding: 18px;
+}
+
+.video-player-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 48px 14px 4px;
+}
+
+.video-player-heading strong {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.video-player-heading span {
+  color: #888888;
+  font-size: 13px;
+}
+
+.video-player-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.video-player {
+  display: block;
+  width: 100%;
+  max-height: 72vh;
+  border-radius: 10px;
+  background: #000000;
+}
+
+.video-player-empty {
+  display: flex;
+  min-height: 360px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #050505;
+  color: #d8d8d8;
+  font-size: 16px;
+}
+
 @media (max-width: 1180px) {
   .app-header {
     grid-template-columns: 180px minmax(260px, 1fr);

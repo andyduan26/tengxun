@@ -13,6 +13,8 @@ const activeIndex = ref(0);
 const isBannerFading = ref(false);
 const isLoading = ref(true);
 const loadError = ref("");
+const selectedVideo = ref(null);
+const playerError = ref("");
 let timer = null;
 
 const activeBanner = computed(() => banners.value[activeIndex.value] || null);
@@ -29,6 +31,7 @@ function normalizeVideoProject(item) {
     category: item.category,
     badgeText: item.badge_text,
     statusText: item.status_text,
+    videoUrl: item.video_file_url,
     isBanner: item.is_banner,
     sortWeight: item.sort_weight,
   };
@@ -96,6 +99,25 @@ function selectCategory(category) {
 
   currentCategory.value = category;
   fetchData(category);
+}
+
+function openPlayer(item) {
+  if (!item.videoUrl) {
+    playerError.value = "该内容暂未上传视频文件。";
+    selectedVideo.value = item;
+    stopTimer();
+    return;
+  }
+
+  playerError.value = "";
+  selectedVideo.value = item;
+  stopTimer();
+}
+
+function closePlayer() {
+  selectedVideo.value = null;
+  playerError.value = "";
+  restartTimer();
 }
 
 function setActiveBanner(index) {
@@ -171,7 +193,7 @@ onBeforeUnmount(stopTimer);
               <p class="banner-meta">{{ activeBanner.tags }} · {{ activeBanner.statusText }}</p>
 
               <div class="banner-actions">
-                <button class="banner-play" type="button">立即播放</button>
+                <button class="banner-play" type="button" @click="openPlayer(activeBanner)">立即播放</button>
                 <button class="banner-secondary" type="button">加入片单</button>
               </div>
             </div>
@@ -235,6 +257,7 @@ onBeforeUnmount(stopTimer);
 
             <div class="recommend-info">
               <button class="recommend-follow" type="button">Ξ+追</button>
+              <button class="recommend-play" type="button" @click="openPlayer(item)">立即播放</button>
               <h3>《{{ item.title }}》</h3>
               <p class="recommend-tags">{{ item.category }} {{ item.tags }}</p>
               <p class="recommend-quote">“{{ item.subtitle }}”</p>
@@ -246,6 +269,30 @@ onBeforeUnmount(stopTimer);
           暂无相关剧集
         </div>
       </section>
+
+      <div v-if="selectedVideo" class="video-player-modal" role="dialog" aria-modal="true">
+        <div class="video-player-backdrop" @click="closePlayer"></div>
+        <div class="video-player-panel">
+          <button class="video-player-close" type="button" aria-label="关闭播放器" @click="closePlayer">×</button>
+          <div class="video-player-heading">
+            <strong>《{{ selectedVideo.title }}》</strong>
+            <span>{{ selectedVideo.statusText }}</span>
+          </div>
+
+          <video
+            v-if="selectedVideo.videoUrl"
+            class="video-player"
+            :src="selectedVideo.videoUrl"
+            controls
+            autoplay
+            playsinline
+          ></video>
+
+          <div v-else class="video-player-empty">
+            {{ playerError }}
+          </div>
+        </div>
+      </div>
     </div>
   </AppLayout>
 </template>
