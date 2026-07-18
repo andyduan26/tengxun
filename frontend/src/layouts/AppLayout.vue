@@ -1,50 +1,71 @@
 <script setup>
-const navItems = ["首页", "电视剧", "电影", "综艺", "动漫", "纪录片"];
+const headerActions = ["会员专区", "游戏", "历史", "创作", "下载客户端", "登录"];
 
-const sideItems = [
-  "精选",
-  "正在热播",
-  "会员专区",
-  "腾讯出品",
-  "排行榜",
-  "观看历史",
+const sidebarItems = [
+  "首页",
+  "VIP会员",
+  "电视剧",
+  "电影",
+  "综艺",
+  "动漫",
+  "少儿",
+  "NBA",
+  "短剧",
+  "纪录片",
+];
+
+const hotSearches = [
+  "仙逆 王林化神",
+  "百花杀 今日开播",
+  "这一秒过火719播",
+  "庆余年第二季",
+  "长相思 名场面",
 ];
 </script>
 
 <template>
   <div class="app-shell">
     <header class="app-header">
-      <a class="app-logo" href="/">
+      <a class="app-logo" href="/" aria-label="腾讯视频首页">
         <span class="app-logo-mark"></span>
         <span>腾讯视频</span>
       </a>
 
-      <nav class="app-top-nav" aria-label="主频道">
+      <div class="app-search-wrap">
+        <label class="app-search">
+          <span class="app-search-icon">⌕</span>
+          <input type="search" placeholder="这一秒过火719播" />
+        </label>
+
+        <div class="app-search-panel">
+          <p class="app-search-panel-title">热门搜索</p>
+          <ol class="app-hot-list">
+            <li v-for="(item, index) in hotSearches" :key="item">
+              <span class="app-hot-rank">{{ index + 1 }}</span>
+              <span>{{ item }}</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <nav class="app-header-actions" aria-label="用户功能">
         <a
-          v-for="item in navItems"
+          v-for="item in headerActions"
           :key="item"
-          :class="['app-top-nav-link', { 'is-active': item === '首页' }]"
+          :class="['app-action-link', { 'is-primary': item === '登录' }]"
           href="/"
         >
           {{ item }}
         </a>
       </nav>
-
-      <div class="app-header-actions">
-        <label class="app-search">
-          <span class="sr-only">搜索</span>
-          <input type="search" placeholder="搜索电影、电视剧、综艺" />
-        </label>
-        <button class="app-login-button" type="button">登录</button>
-      </div>
     </header>
 
-    <aside class="app-sidebar" aria-label="内容导航">
-      <nav class="app-side-nav">
+    <aside class="app-sidebar">
+      <nav class="app-side-nav" aria-label="频道导航">
         <a
-          v-for="item in sideItems"
+          v-for="item in sidebarItems"
           :key="item"
-          :class="['app-side-nav-link', { 'is-active': item === '精选' }]"
+          :class="['app-side-link', { 'is-active': item === '首页' }]"
           href="/"
         >
           {{ item }}

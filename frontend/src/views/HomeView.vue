@@ -1,52 +1,121 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import apiClient from "@/api/client";
 import AppLayout from "@/layouts/AppLayout.vue";
 
 
-const healthStatus = ref("checking");
+const banners = [
+  {
+    title: "仙逆",
+    tag: "腾讯视频 全网独播",
+    highlight: "青宜：只此一次，却真香！",
+    meta: "热血修仙 / 国漫高燃 / 每周更新",
+    image:
+      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=1800&q=85",
+  },
+  {
+    title: "百花杀",
+    tag: "今日上新",
+    highlight: "乱世花影，一念成局",
+    meta: "古装悬疑 / 情感博弈 / 高清臻彩",
+    image:
+      "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=1800&q=85",
+  },
+  {
+    title: "庆余年",
+    tag: "热播推荐",
+    highlight: "风云再起，少年入局",
+    meta: "古装权谋 / 爽感剧情 / 会员抢先看",
+    image:
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=85",
+  },
+  {
+    title: "长相思",
+    tag: "高分剧集",
+    highlight: "山海有期，相思无尽",
+    meta: "东方幻想 / 情感名场面 / 沉浸观看",
+    image:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1800&q=85",
+  },
+];
 
-onMounted(async () => {
-  try {
-    const response = await apiClient.get("/health/");
-    healthStatus.value = response.data?.data?.status || "unknown";
-  } catch (error) {
-    healthStatus.value = "offline";
+const activeIndex = ref(0);
+let timer = null;
+
+const activeBanner = computed(() => banners[activeIndex.value]);
+
+function setActiveBanner(index) {
+  activeIndex.value = index;
+  restartTimer();
+}
+
+function nextBanner() {
+  activeIndex.value = (activeIndex.value + 1) % banners.length;
+}
+
+function startTimer() {
+  timer = window.setInterval(nextBanner, 5000);
+}
+
+function stopTimer() {
+  if (timer) {
+    window.clearInterval(timer);
+    timer = null;
   }
-});
+}
+
+function restartTimer() {
+  stopTimer();
+  startTimer();
+}
+
+onMounted(startTimer);
+onBeforeUnmount(stopTimer);
 </script>
 
 <template>
   <AppLayout>
-    <section class="home-hero">
-      <div class="home-hero-content">
-        <p class="home-kicker">Tencent Video Clone</p>
-        <h1>暗黑极简视频首页骨架</h1>
-        <p>
-          当前步骤完成顶部固定导航栏、左侧固定边栏和右侧主体滚动区。
-          API 状态：{{ healthStatus }}。
-        </p>
-      </div>
+    <div class="home-page">
+      <section class="banner" aria-label="首页视频轮播">
+        <div class="banner-stage">
+          <div
+            class="banner-poster"
+            :style="{ '--banner-image': `url(${activeBanner.image})` }"
+          ></div>
 
-      <div class="home-hero-panel">
-        <span>Featured</span>
-        <strong>固定布局验证区</strong>
-      </div>
-    </section>
+          <div class="banner-copy">
+            <span class="banner-tag">{{ activeBanner.tag }}</span>
+            <h1 class="banner-title">{{ activeBanner.title }}</h1>
+            <p class="banner-desc">{{ activeBanner.highlight }}</p>
+            <p class="banner-meta">{{ activeBanner.meta }}</p>
 
-    <section class="home-section">
-      <div class="home-section-heading">
-        <h2>精选内容</h2>
-        <a href="/">查看全部</a>
-      </div>
-
-      <div class="home-card-grid">
-        <div v-for="index in 8" :key="index" class="home-video-card">
-          <div class="home-video-cover"></div>
-          <p>视频卡片 {{ index }}</p>
+            <div class="banner-actions">
+              <button class="banner-play" type="button">立即播放</button>
+              <button class="banner-secondary" type="button">加入片单</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+
+        <div class="banner-thumbs" aria-label="轮播缩略图">
+          <button
+            v-for="(item, index) in banners"
+            :key="item.title"
+            :class="['banner-thumb', { 'is-active': index === activeIndex }]"
+            type="button"
+            @click="setActiveBanner(index)"
+          >
+            <span
+              class="banner-thumb-cover"
+              :style="{ '--thumb-image': `url(${item.image})` }"
+            ></span>
+            <span>
+              <span class="banner-thumb-title">{{ item.title }}</span>
+              <span class="banner-thumb-desc">{{ item.highlight }}</span>
+            </span>
+            <span class="banner-progress"></span>
+          </button>
+        </div>
+      </section>
+    </div>
   </AppLayout>
 </template>
