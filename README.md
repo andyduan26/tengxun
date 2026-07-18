@@ -16,3 +16,9 @@ Stage 1 initializes the project foundation and provides a backend health check e
 ## Quick Start
 
 See `INSTALL.md` for local setup steps.
+
+## Deployment
+
+- Frontend: Vercel, configured by `vercel.json`
+- Backend: Railway, configured by `railway.json`
+- Frontend API base URL: `VITE_API_BASE_URL=https://<backend-domain>/api`

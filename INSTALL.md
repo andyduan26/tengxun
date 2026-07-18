@@ -28,20 +28,31 @@ Use the superuser account to manage video projects, categories, VIP status, imag
 
 ## Deployment
 
-Frontend deployment uses `netlify.toml`.
+Recommended deployment uses Vercel for the frontend and Railway for the backend.
+Legacy Netlify and Render configuration files are kept for compatibility.
 
-Backend deployment uses `render.yaml`. Configure these environment variables in production:
+Frontend deployment uses `vercel.json`. Import the GitHub repository in Vercel
+with the project root left as the repository root, then configure this
+environment variable:
 
 ```text
+VITE_API_BASE_URL=https://<your-railway-backend-domain>/api
+```
+
+Backend deployment uses `railway.json`. Configure these environment variables
+in Railway:
+
+```text
+DJANGO_DEBUG=False
+DJANGO_SECRET_KEY=<strong-random-secret>
 DJANGO_ALLOWED_HOSTS=<your-backend-domain>
 CORS_ALLOWED_ORIGINS=<your-frontend-origin>
 CSRF_TRUSTED_ORIGINS=<your-frontend-origin>,<your-backend-origin>
-VITE_API_BASE_URL=<your-backend-origin>/api
+DATABASE_URL=<railway-postgresql-url>
 ```
 
-On Render, create the backend from the repository Blueprint. Render supplies
-`RENDER_EXTERNAL_HOSTNAME` automatically, and `render.yaml` binds Gunicorn to
-Render's `$PORT`.
+Railway supplies `RAILWAY_PUBLIC_DOMAIN` automatically after a public domain is
+generated, and `railway.json` binds Gunicorn to Railway's `$PORT`.
 
 ## Frontend
 

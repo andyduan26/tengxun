@@ -16,3 +16,4 @@
 - Added dedicated `video.VideoProject` model and admin for detailed Tencent Video-style content management.
 - Added optional video file upload field to video project admin.
 - Prepared Django backend for Render deployment with dynamic host trust and port binding.
+- Added Vercel frontend and Railway backend deployment configuration.
