@@ -1,0 +1,32 @@
+[
+  {
+    "model": "core.videoproject",
+    "pk": 1,
+    "fields": {
+      "title": "仙逆",
+      "description": "青宜：只此一次，却真香！",
+      "cover_image_url": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=1800&q=85",
+      "thumbnail_url": "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=900&q=85",
+      "category": "动漫",
+      "is_vip": true,
+      "sort_weight": 100,
+      "created_at": "2026-07-19T00:00:00+08:00",
+      "updated_at": "2026-07-19T00:00:00+08:00"
+    }
+  },
+  {
+    "model": "core.videoproject",
+    "pk": 2,
+    "fields": {
+      "title": "脱口秀3",
+      "description": "爆笑回归，金句不断，笑到停不下来。",
+      "cover_image_url": "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?auto=format&fit=crop&w=1800&q=85",
+      "thumbnail_url": "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?auto=format&fit=crop&w=900&q=85",
+      "category": "综艺",
+      "is_vip": false,
+      "sort_weight": 90,
+      "created_at": "2026-07-19T00:00:00+08:00",
+      "updated_at": "2026-07-19T00:00:00+08:00"
+    }
+  }
+]

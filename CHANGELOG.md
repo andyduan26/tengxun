@@ -6,3 +6,9 @@
 - Added Django REST Framework health check API.
 - Added Vue3 Vite application shell.
 - Added setup and API documentation.
+
+## 2026-07-19
+
+- Added `VideoProject` data model for homepage video content.
+- Added homepage banners and recommendations API endpoints.
+- Added initial video project fixture data.
