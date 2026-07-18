@@ -1,5 +1,5 @@
 <script setup>
-const headerActions = ["会员专区", "游戏", "历史", "创作", "下载客户端", "登录"];
+const headerActions = ["会员专区", "游戏", "快捷访问", "历史", "创作", "下载客户端"];
 
 const sidebarItems = [
   "首页",
@@ -33,8 +33,12 @@ const hotSearches = [
 
       <div class="app-search-wrap">
         <label class="app-search">
-          <span class="app-search-icon">⌕</span>
           <input type="search" placeholder="这一秒过火719播" />
+          <span class="app-search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M10.8 4.5a6.3 6.3 0 1 1 0 12.6 6.3 6.3 0 0 1 0-12.6Zm0 1.8a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm5.1 9.1 3.7 3.7-1.3 1.3-3.7-3.7 1.3-1.3Z" />
+            </svg>
+          </span>
         </label>
 
         <div class="app-search-panel">
@@ -52,11 +56,14 @@ const hotSearches = [
         <a
           v-for="item in headerActions"
           :key="item"
-          :class="['app-action-link', { 'is-primary': item === '登录' }]"
+          class="app-action-link"
           href="/"
         >
           {{ item }}
         </a>
+        <button class="app-avatar" type="button" aria-label="登录">
+          <span>登</span>
+        </button>
       </nav>
     </header>
 
