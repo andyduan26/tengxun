@@ -38,6 +38,9 @@ const assertions = [
   ["banner auto plays every five seconds", files.home.includes("window.setInterval(nextBanner, 5000)")],
   ["banner has dark-to-transparent overlay", files.css.includes("linear-gradient(0deg, #121212 0%, rgba(18, 18, 18, 0) 70%)")],
   ["banner fades poster and copy", files.css.includes(".banner-poster") && files.css.includes("transition: opacity 260ms ease") && files.css.includes(".banner-copy")],
+  ["banner is full-width stage", files.css.includes(".banner") && files.css.includes("grid-template-columns: 1fr")],
+  ["banner has explicit large height", files.css.includes("height: clamp(560px, 64vh, 760px)")],
+  ["banner thumbs overlay the poster", files.css.includes(".banner-thumbs") && files.css.includes("position: absolute")],
 ];
 
 const failures = assertions.filter(([, passed]) => !passed);

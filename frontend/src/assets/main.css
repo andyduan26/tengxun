@@ -335,28 +335,32 @@ a {
 
 .home-page {
   min-height: calc(100vh - 70px);
-  padding: 30px 34px 56px;
+  padding: 22px 28px 56px;
 }
 
 .banner {
   position: relative;
   display: grid;
+  height: clamp(560px, 64vh, 760px);
   min-height: 560px;
-  grid-template-columns: minmax(0, 1fr) 248px;
-  gap: 22px;
+  grid-template-columns: 1fr;
 }
 
 .banner-stage {
   position: relative;
   overflow: hidden;
   border-radius: 0;
-  background: #181818;
+  background:
+    radial-gradient(circle at 70% 24%, rgba(0, 204, 76, 0.18), transparent 32%),
+    linear-gradient(135deg, #252525 0%, #151515 46%, #080808 100%);
 }
 
 .banner-poster {
   position: absolute;
   inset: 0;
-  background-image: var(--banner-image);
+  background-image:
+    linear-gradient(135deg, rgba(34, 34, 34, 0.1), rgba(0, 0, 0, 0.22)),
+    var(--banner-image);
   background-position: center;
   background-size: cover;
   opacity: 1;
@@ -451,9 +455,14 @@ a {
 }
 
 .banner-thumbs {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 300px;
 }
 
 .banner-thumb {
@@ -465,8 +474,10 @@ a {
   align-items: center;
   border: 1px solid transparent;
   border-radius: 0;
-  background: #181818;
+  background: rgba(24, 24, 24, 0.9);
   color: #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 8px;
   text-align: left;
   cursor: pointer;
@@ -644,8 +655,9 @@ a {
   }
 
   .banner-thumbs {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    right: 20px;
+    bottom: 20px;
+    width: min(360px, calc(100% - 40px));
   }
 
   .recommend-grid {
@@ -701,6 +713,7 @@ a {
   }
 
   .banner {
+    height: auto;
     min-height: auto;
   }
 
@@ -715,7 +728,9 @@ a {
   }
 
   .banner-thumbs {
-    grid-template-columns: 1fr;
+    position: static;
+    width: 100%;
+    margin-top: 14px;
   }
 
   .recommend-heading {
