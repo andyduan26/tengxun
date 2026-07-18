@@ -39,6 +39,10 @@ CSRF_TRUSTED_ORIGINS=<your-frontend-origin>,<your-backend-origin>
 VITE_API_BASE_URL=<your-backend-origin>/api
 ```
 
+On Render, create the backend from the repository Blueprint. Render supplies
+`RENDER_EXTERNAL_HOSTNAME` automatically, and `render.yaml` binds Gunicorn to
+Render's `$PORT`.
+
 ## Frontend
 
 ```bash
