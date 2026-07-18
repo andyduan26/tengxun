@@ -91,6 +91,12 @@ class HomeVideoProjectAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()["data"]), 6)
 
+    def test_home_recommendations_treats_home_as_all_categories(self):
+        response = self.client.get(reverse("home-recommendations"), {"category": "首页"})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()["data"]), 6)
+
 
 class VideoProjectAdminTests(TestCase):
     def test_video_project_admin_has_management_features(self):

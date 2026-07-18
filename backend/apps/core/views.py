@@ -49,7 +49,7 @@ class HomeRecommendationListAPIView(APIView):
     def get(self, request):
         category = request.query_params.get("category", "全部")
         projects = VideoProject.objects.all()
-        if category and category != "全部":
+        if category and category not in ("首页", "全部"):
             projects = projects.filter(category=category)
 
         serializer = VideoProjectSerializer(projects, many=True, context={"request": request})

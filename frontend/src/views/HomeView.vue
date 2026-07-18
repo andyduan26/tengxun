@@ -5,6 +5,7 @@ import AppLayout from "@/layouts/AppLayout.vue";
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
 
 const banners = ref([]);
 const recommendations = ref([]);
@@ -19,7 +20,26 @@ let timer = null;
 
 const activeBanner = computed(() => banners.value[activeIndex.value] || null);
 
+function normalizeCategory(category) {
+  return category === "首页" ? "全部" : category;
+}
+
+function normalizeMediaUrl(url) {
+  if (!url) {
+    return "";
+  }
+  if (/^https?:\/\//.test(url)) {
+    return url;
+  }
+  if (url.startsWith("/")) {
+    return `${API_ORIGIN}${url}`;
+  }
+  return `${API_ORIGIN}/media/${url}`;
+}
+
 function normalizeVideoProject(item) {
+  const rawVideoUrl = item.video_file_url || item.video_file || item.video_url || "";
+
   return {
     id: item.id,
     title: item.title,
@@ -31,7 +51,7 @@ function normalizeVideoProject(item) {
     category: item.category,
     badgeText: item.badge_text,
     statusText: item.status_text,
-    videoUrl: item.video_file_url,
+    videoUrl: normalizeMediaUrl(rawVideoUrl),
     isBanner: item.is_banner,
     sortWeight: item.sort_weight,
   };
@@ -73,7 +93,8 @@ async function fetchData(category = "首页") {
   loadError.value = "";
 
   try {
-    const categoryQuery = `category=${encodeURIComponent(category)}`;
+    const normalizedCategory = normalizeCategory(category);
+    const categoryQuery = `category=${encodeURIComponent(normalizedCategory)}`;
     const [bannerData, recommendationData] = await Promise.all([
       fetchJson(`/home/banners/?${categoryQuery}`),
       fetchJson(`/home/recommendations/?${categoryQuery}`),
