@@ -1,5 +1,12 @@
 <script setup>
-const headerActions = ["会员专区", "游戏", "快捷访问", "历史", "创作", "下载客户端"];
+const headerActions = [
+  { label: "会员专区", icon: "VIP" },
+  { label: "游戏", icon: "🎮" },
+  { label: "快捷访问", icon: "⌘" },
+  { label: "历史", icon: "◷" },
+  { label: "创作", icon: "✎" },
+  { label: "下载客户端", icon: "⇩" },
+];
 
 const sidebarItems = [
   "首页",
@@ -55,11 +62,12 @@ const hotSearches = [
       <nav class="app-header-actions" aria-label="用户功能">
         <a
           v-for="item in headerActions"
-          :key="item"
+          :key="item.label"
           class="app-action-link"
           href="/"
         >
-          {{ item }}
+          <span class="app-action-icon">{{ item.icon }}</span>
+          <span class="app-action-label">{{ item.label }}</span>
         </a>
         <button class="app-avatar" type="button" aria-label="登录">
           <span>登</span>

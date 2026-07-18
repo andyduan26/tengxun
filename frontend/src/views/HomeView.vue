@@ -39,6 +39,23 @@ const banners = [
   },
 ];
 
+const recommendations = [
+  {
+    title: "《仙逆》",
+    tags: "动漫 东方玄幻 东方仙侠 逆袭",
+    quote: "青宜：只此一次，却真香！",
+    image:
+      "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=900&q=85",
+  },
+  {
+    title: "《沈腾小品YYDS：笑到停不下来~》",
+    tags: "综艺 沈腾 晚会 喜剧表演",
+    quote: "沈腾小品YYDS：笑到停不下来~",
+    image:
+      "https://images.unsplash.com/photo-1527224538127-2104bb71c51b?auto=format&fit=crop&w=900&q=85",
+  },
+];
+
 const activeIndex = ref(0);
 let timer = null;
 
@@ -114,6 +131,33 @@ onBeforeUnmount(stopTimer);
             </span>
             <span class="banner-progress"></span>
           </button>
+        </div>
+      </section>
+
+      <section class="recommend-section" aria-label="为你推荐">
+        <div class="recommend-heading">
+          <h2>为你推荐</h2>
+          <span>正在热播 · 高分内容 · 会员精选</span>
+        </div>
+
+        <div class="recommend-grid">
+          <article
+            v-for="item in recommendations"
+            :key="item.title"
+            class="recommend-card"
+          >
+            <div
+              class="recommend-poster"
+              :style="{ '--poster-image': `url(${item.image})` }"
+            ></div>
+
+            <div class="recommend-info">
+              <button class="recommend-follow" type="button">Ξ+追</button>
+              <h3>{{ item.title }}</h3>
+              <p class="recommend-tags">{{ item.tags }}</p>
+              <p class="recommend-quote">“{{ item.quote }}”</p>
+            </div>
+          </article>
         </div>
       </section>
     </div>

@@ -78,10 +78,10 @@ a {
   grid-template-columns: 220px minmax(300px, 560px) 1fr;
   align-items: center;
   gap: 28px;
-  border-bottom: 1px solid var(--tv-border);
-  background: rgba(18, 18, 18, 0.78);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(15, 15, 15, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 0 28px 0 24px;
 }
 
@@ -133,8 +133,15 @@ a {
   gap: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #252525;
   padding: 0 16px;
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.app-search-wrap:focus-within .app-search {
+  border-color: #00cc4c;
+  background: #252525;
+  box-shadow: 0 0 0 3px rgba(0, 204, 76, 0.14);
 }
 
 .app-search-icon {
@@ -221,18 +228,39 @@ a {
   min-width: 0;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
+  gap: 14px;
 }
 
 .app-action-link {
+  display: inline-flex;
+  min-width: 42px;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   color: var(--tv-text-muted);
-  font-size: 14px;
+  font-size: 11px;
+  line-height: 1;
   white-space: nowrap;
+  transition: color 160ms ease, transform 160ms ease;
 }
 
 .app-action-link:hover,
 .app-action-link:focus-visible {
   color: var(--tv-green);
+  transform: translateY(-1px);
+}
+
+.app-action-icon {
+  display: inline-flex;
+  height: 20px;
+  align-items: center;
+  color: #d8d8d8;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.app-action-label {
+  color: inherit;
 }
 
 .app-avatar {
@@ -474,6 +502,118 @@ a {
   content: "";
 }
 
+.recommend-section {
+  margin-top: 34px;
+}
+
+.recommend-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.recommend-heading h2 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.recommend-heading span {
+  color: #888888;
+  font-size: 13px;
+}
+
+.recommend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.recommend-card {
+  display: grid;
+  min-height: 242px;
+  grid-template-columns: 42% minmax(0, 1fr);
+  gap: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  background: #1f1f1f;
+  padding: 16px;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.recommend-card:hover {
+  border-color: rgba(0, 204, 76, 0.28);
+  background: #232323;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
+  transform: translateY(-4px);
+}
+
+.recommend-poster {
+  min-height: 210px;
+  border-radius: 10px;
+  background-color: #2a2a2a;
+  background-image: var(--poster-image);
+  background-position: center;
+  background-size: cover;
+}
+
+.recommend-info {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 6px 12px 0;
+}
+
+.recommend-info h3 {
+  max-width: calc(100% - 88px);
+  margin: 0;
+  color: #ffffff;
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.recommend-tags {
+  margin: 12px 0 0;
+  color: #888888;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.recommend-quote {
+  margin: 22px 0 0;
+  color: #00cc4c;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.65;
+}
+
+.recommend-follow {
+  position: absolute;
+  top: 12px;
+  right: 4px;
+  height: 34px;
+  border-radius: 999px;
+  background: #333333;
+  color: #e8e8e8;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.recommend-follow:hover,
+.recommend-follow:focus-visible {
+  background: #00cc4c;
+  color: #06180c;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 1180px) {
   .app-header {
     grid-template-columns: 180px minmax(260px, 1fr);
@@ -490,6 +630,10 @@ a {
   .banner-thumbs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .recommend-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -556,5 +700,25 @@ a {
 
   .banner-thumbs {
     grid-template-columns: 1fr;
+  }
+
+  .recommend-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .recommend-card {
+    grid-template-columns: 1fr;
+  }
+
+  .recommend-info h3 {
+    max-width: 100%;
+  }
+
+  .recommend-follow {
+    position: static;
+    width: max-content;
+    margin-bottom: 14px;
   }
 }
