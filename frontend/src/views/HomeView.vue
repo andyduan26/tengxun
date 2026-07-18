@@ -8,6 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000
 
 const banners = ref([]);
 const recommendations = ref([]);
+const currentCategory = ref("首页");
 const activeIndex = ref(0);
 const isBannerFading = ref(false);
 const isLoading = ref(true);
@@ -61,13 +62,18 @@ async function fetchJson(path) {
 }
 
 async function loadHomeData() {
+  await fetchData(currentCategory.value);
+}
+
+async function fetchData(category = "首页") {
   isLoading.value = true;
   loadError.value = "";
 
   try {
+    const categoryQuery = `category=${encodeURIComponent(category)}`;
     const [bannerData, recommendationData] = await Promise.all([
-      fetchJson("/home/banners/"),
-      fetchJson("/home/recommendations/?category=全部"),
+      fetchJson(`/home/banners/?${categoryQuery}`),
+      fetchJson(`/home/recommendations/?${categoryQuery}`),
     ]);
 
     banners.value = bannerData.map(normalizeVideoProject);
@@ -81,6 +87,15 @@ async function loadHomeData() {
   } finally {
     isLoading.value = false;
   }
+}
+
+function selectCategory(category) {
+  if (category === currentCategory.value) {
+    return;
+  }
+
+  currentCategory.value = category;
+  fetchData(category);
 }
 
 function setActiveBanner(index) {
@@ -128,7 +143,10 @@ onBeforeUnmount(stopTimer);
 </script>
 
 <template>
-  <AppLayout>
+  <AppLayout
+    :active-category="currentCategory"
+    @select-category="selectCategory"
+  >
     <div class="home-page">
       <section class="banner" aria-label="首页视频轮播">
         <div v-if="isLoading" class="banner-loading">
@@ -199,7 +217,7 @@ onBeforeUnmount(stopTimer);
           </article>
         </div>
 
-        <div v-else class="recommend-grid">
+        <div v-else-if="recommendations.length > 0" class="recommend-grid">
           <article
             v-for="item in recommendations"
             :key="item.id"
@@ -222,6 +240,10 @@ onBeforeUnmount(stopTimer);
               <p class="recommend-quote">“{{ item.subtitle }}”</p>
             </div>
           </article>
+        </div>
+
+        <div v-else class="recommend-empty">
+          暂无相关剧集
         </div>
       </section>
     </div>

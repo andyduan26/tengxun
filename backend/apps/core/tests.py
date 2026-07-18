@@ -63,6 +63,14 @@ class HomeVideoProjectAPITests(TestCase):
         self.assertIn("badge_text", payload["data"][0])
         self.assertIn("status_text", payload["data"][0])
 
+    def test_home_banners_filters_by_category(self):
+        response = self.client.get(reverse("home-banners"), {"category": "电影"})
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["success"])
+        self.assertEqual([item["title"] for item in payload["data"]], ["流浪地球"])
+
     def test_home_recommendations_filters_by_category(self):
         response = self.client.get(reverse("home-recommendations"), {"category": "电视剧"})
 

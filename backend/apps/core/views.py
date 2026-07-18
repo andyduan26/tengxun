@@ -27,7 +27,11 @@ class HomeBannerListAPIView(APIView):
     permission_classes = []
 
     def get(self, request):
-        projects = VideoProject.objects.filter(is_banner=True)[:5]
+        category = request.query_params.get("category", "全部")
+        projects = VideoProject.objects.filter(is_banner=True)
+        if category and category not in ("首页", "全部"):
+            projects = projects.filter(category=category)
+        projects = projects[:5]
         serializer = VideoProjectSerializer(projects, many=True)
         return Response(
             {

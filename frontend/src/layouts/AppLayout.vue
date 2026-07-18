@@ -1,4 +1,13 @@
 <script setup>
+defineProps({
+  activeCategory: {
+    type: String,
+    default: "首页",
+  },
+});
+
+const emit = defineEmits(["select-category"]);
+
 const headerActions = [
   { label: "会员专区", icon: "VIP" },
   { label: "游戏", icon: "🎮" },
@@ -10,14 +19,11 @@ const headerActions = [
 
 const sidebarItems = [
   "首页",
-  "VIP会员",
   "电视剧",
   "电影",
   "综艺",
   "动漫",
   "少儿",
-  "NBA",
-  "短剧",
   "纪录片",
 ];
 
@@ -77,14 +83,15 @@ const hotSearches = [
 
     <aside class="app-sidebar">
       <nav class="app-side-nav" aria-label="频道导航">
-        <a
+        <button
           v-for="item in sidebarItems"
           :key="item"
-          :class="['app-side-link', { 'is-active': item === '首页' }]"
-          href="/"
+          :class="['app-side-link', { 'is-active': item === activeCategory }]"
+          type="button"
+          @click="emit('select-category', item)"
         >
           {{ item }}
-        </a>
+        </button>
       </nav>
     </aside>
 
