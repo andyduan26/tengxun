@@ -12,3 +12,4 @@
 - Added `VideoProject` data model for homepage video content.
 - Added homepage banners and recommendations API endpoints.
 - Added initial video project fixture data.
+- Improved Chinese SimpleUI admin for managing video projects.

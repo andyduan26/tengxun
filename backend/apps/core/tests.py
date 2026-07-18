@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib import admin
 
+from .admin import VideoProjectAdmin
 from .models import VideoProject
 
 
@@ -71,3 +73,13 @@ class HomeVideoProjectAPITests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()["data"]), 6)
+
+
+class VideoProjectAdminTests(TestCase):
+    def test_video_project_admin_has_management_features(self):
+        model_admin = admin.site._registry[VideoProject]
+
+        self.assertIsInstance(model_admin, VideoProjectAdmin)
+        self.assertIn("cover_preview", model_admin.readonly_fields)
+        self.assertIn("export_as_csv", model_admin.actions)
+        self.assertEqual(admin.site.site_header, "腾讯视频内容管理后台")

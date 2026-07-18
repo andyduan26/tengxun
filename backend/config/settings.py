@@ -92,3 +92,32 @@ REST_FRAMEWORK = {
 
 SIMPLEUI_HOME_INFO = False
 SIMPLEUI_ANALYSIS = False
+SIMPLEUI_LOGO = ""
+SIMPLEUI_CONFIG = {
+    "system_keep": True,
+    "menu_display": ["核心", "认证和授权"],
+    "dynamic": False,
+    "menus": [
+        {
+            "app": "core",
+            "name": "内容管理",
+            "icon": "fas fa-film",
+            "models": [
+                {
+                    "name": "视频剧集",
+                    "icon": "fas fa-video",
+                    "url": "core/videoproject/",
+                }
+            ],
+        },
+        {
+            "app": "auth",
+            "name": "认证和授权",
+            "icon": "fas fa-user-shield",
+            "models": [
+                {"name": "用户", "icon": "fas fa-user", "url": "auth/user/"},
+                {"name": "用户组", "icon": "fas fa-users", "url": "auth/group/"},
+            ],
+        },
+    ],
+}
