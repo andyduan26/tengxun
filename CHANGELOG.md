@@ -29,3 +29,4 @@
 - Added production video fixture seeding for Railway deployments.
 - Removed frontend fallback mock data so production pages only render backend API content.
 - Locked frontend production API requests to the verified Railway backend URL.
+- Allowed Vercel and Netlify production frontend domains through backend CORS.
