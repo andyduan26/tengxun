@@ -18,3 +18,4 @@
 - Prepared Django backend for Render deployment with dynamic host trust and port binding.
 - Added Vercel frontend and Railway backend deployment configuration.
 - Fixed Railway monorepo deployment commands for backend root directory builds.
+- Forced Railway Nixpacks Python detection for backend subdirectory deployment.

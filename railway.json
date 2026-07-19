@@ -4,17 +4,13 @@
     "builder": "NIXPACKS",
     "watchPatterns": [
       "/backend/**",
-      "/railway.json"
+      "/railway.json",
+      "/nixpacks.toml"
     ],
-    "nixpacksPlan": {
-      "providers": [
-        "python"
-      ]
-    },
-    "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    "buildCommand": "cd backend && python -m pip install -r requirements.txt && python manage.py collectstatic --noinput"
   },
   "deploy": {
-    "startCommand": "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT",
+    "startCommand": "cd backend && python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT",
     "healthcheckPath": "/api/health/",
     "healthcheckTimeout": 100,
     "restartPolicyType": "ON_FAILURE",
