@@ -6,13 +6,20 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def env_list(name, default=""):
+    values = []
+    for raw_value in os.getenv(name, default).split(","):
+        value = raw_value.strip().strip("\"'").strip()
+        value = value.removeprefix("[").removesuffix("]").strip()
+        if value:
+            values.append(value)
+    return values
+
+
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-only-secret-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-    if host.strip()
-]
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost")
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -103,21 +110,15 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-CORS_ALLOWED_ORIGINS = os.getenv(
+CORS_ALLOWED_ORIGINS = env_list(
     "CORS_ALLOWED_ORIGINS",
     "http://localhost:5173,http://127.0.0.1:5173,https://tengxun-five.vercel.app",
 )
-CORS_ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in CORS_ALLOWED_ORIGINS.split(",")
-    if origin.strip()
-]
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
-]
+CSRF_TRUSTED_ORIGINS = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "",
+)
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 if RAILWAY_PUBLIC_DOMAIN:
