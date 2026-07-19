@@ -21,3 +21,4 @@
 - Forced Railway Nixpacks Python detection for backend subdirectory deployment.
 - Moved Railway build and start commands into Nixpacks configuration with explicit pip support.
 - Added frontend fallback content when the deployed API base URL is still a placeholder.
+- Switched Railway configuration to backend subdirectory deployment with runtime.txt.
