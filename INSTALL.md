@@ -39,10 +39,10 @@ environment variable. The value must include `https://` and end with `/api`.
 VITE_API_BASE_URL=https://<your-railway-backend-domain>/api
 ```
 
-Backend deployment uses the root `railway.json`. In Railway service settings,
-set Root Directory to `/backend` and Config File Path to `/railway.json`; this
-lets build and start commands run directly inside the Django backend directory.
-Configure these environment variables in Railway:
+Backend deployment uses Railway with `/backend` as the service Root Directory.
+Railway reads `/railway.json` from the repository root and builds
+`backend/Dockerfile`, avoiding Nixpacks Python detection issues. Configure
+these environment variables in Railway:
 
 ```text
 DJANGO_DEBUG=False

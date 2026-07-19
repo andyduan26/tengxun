@@ -23,3 +23,4 @@
 - Added frontend fallback content when the deployed API base URL is still a placeholder.
 - Switched Railway configuration to backend subdirectory deployment with runtime.txt.
 - Removed explicit Railway build builder configuration to allow native backend detection.
+- Added Dockerfile-based Railway backend deployment to avoid Nixpacks pip issues.
