@@ -5,10 +5,7 @@ import AppLayout from "@/layouts/AppLayout.vue";
 
 
 const DEFAULT_API_BASE_URL = "https://tengxun-production.up.railway.app/api";
-const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
-const API_BASE_URL = configuredApiBaseUrl.includes("placeholder-backend")
-  ? DEFAULT_API_BASE_URL
-  : configuredApiBaseUrl;
+const API_BASE_URL = DEFAULT_API_BASE_URL;
 const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
 
 const banners = ref([]);
@@ -75,10 +72,6 @@ function badgeClass(item) {
 }
 
 async function fetchJson(path) {
-  if (!API_BASE_URL) {
-    throw new Error("API base URL is not configured");
-  }
-
   const response = await fetch(`${API_BASE_URL}${path}`);
   if (!response.ok) {
     throw new Error(`Request failed: ${response.status}`);
@@ -117,7 +110,7 @@ async function fetchData(category = "首页") {
     banners.value = [];
     recommendations.value = [];
     activeIndex.value = 0;
-    loadError.value = "首页数据加载失败，请检查线上后端接口。";
+    loadError.value = `首页数据加载失败：${error.message}`;
     stopTimer();
   } finally {
     isLoading.value = false;
