@@ -1,10 +1,14 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
+import { fallbackVideoProjects } from "@/data/fallbackVideoProjects";
 import AppLayout from "@/layouts/AppLayout.vue";
 
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+const API_BASE_URL = configuredApiBaseUrl.includes("placeholder-backend")
+  ? ""
+  : configuredApiBaseUrl;
 const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
 
 const banners = ref([]);
@@ -71,6 +75,10 @@ function badgeClass(item) {
 }
 
 async function fetchJson(path) {
+  if (!API_BASE_URL) {
+    throw new Error("API base URL is not configured");
+  }
+
   const response = await fetch(`${API_BASE_URL}${path}`);
   if (!response.ok) {
     throw new Error(`Request failed: ${response.status}`);
@@ -106,11 +114,24 @@ async function fetchData(category = "首页") {
 
     restartTimer();
   } catch (error) {
-    loadError.value = "首页数据加载失败，请确认后端服务已启动。";
-    stopTimer();
+    const fallbackData = getFallbackData(category);
+    const fallbackBanners = fallbackData.filter((item) => item.is_banner);
+    banners.value = (fallbackBanners.length > 0 ? fallbackBanners : fallbackData).map(normalizeVideoProject);
+    recommendations.value = fallbackData.map(normalizeVideoProject);
+    activeIndex.value = 0;
+    loadError.value = "";
+    restartTimer();
   } finally {
     isLoading.value = false;
   }
+}
+
+function getFallbackData(category) {
+  const normalizedCategory = normalizeCategory(category);
+  if (normalizedCategory === "全部") {
+    return fallbackVideoProjects;
+  }
+  return fallbackVideoProjects.filter((item) => item.category === normalizedCategory);
 }
 
 function selectCategory(category) {
