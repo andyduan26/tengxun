@@ -16,5 +16,6 @@ RUN python -m pip install --upgrade pip \
 COPY . .
 
 RUN python manage.py collectstatic --noinput
+RUN chmod +x /app/entrypoint.sh
 
-CMD gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000}
+CMD ["/app/entrypoint.sh"]

@@ -26,3 +26,4 @@
 - Added Dockerfile-based Railway backend deployment to avoid Nixpacks pip issues.
 - Updated Railway startup flow and frontend API default for production Vercel/Railway integration.
 - Sanitized deployment environment lists to tolerate bracketed Railway origin values.
+- Added production video fixture seeding for Railway deployments.
