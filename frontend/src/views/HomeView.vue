@@ -1,7 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-import { fallbackVideoProjects } from "@/data/fallbackVideoProjects";
 import AppLayout from "@/layouts/AppLayout.vue";
 
 
@@ -115,24 +114,14 @@ async function fetchData(category = "首页") {
 
     restartTimer();
   } catch (error) {
-    const fallbackData = getFallbackData(category);
-    const fallbackBanners = fallbackData.filter((item) => item.is_banner);
-    banners.value = (fallbackBanners.length > 0 ? fallbackBanners : fallbackData).map(normalizeVideoProject);
-    recommendations.value = fallbackData.map(normalizeVideoProject);
+    banners.value = [];
+    recommendations.value = [];
     activeIndex.value = 0;
-    loadError.value = "";
-    restartTimer();
+    loadError.value = "首页数据加载失败，请检查线上后端接口。";
+    stopTimer();
   } finally {
     isLoading.value = false;
   }
-}
-
-function getFallbackData(category) {
-  const normalizedCategory = normalizeCategory(category);
-  if (normalizedCategory === "全部") {
-    return fallbackVideoProjects;
-  }
-  return fallbackVideoProjects.filter((item) => item.category === normalizedCategory);
 }
 
 function selectCategory(category) {

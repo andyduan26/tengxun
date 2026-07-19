@@ -27,3 +27,4 @@
 - Updated Railway startup flow and frontend API default for production Vercel/Railway integration.
 - Sanitized deployment environment lists to tolerate bracketed Railway origin values.
 - Added production video fixture seeding for Railway deployments.
+- Removed frontend fallback mock data so production pages only render backend API content.
