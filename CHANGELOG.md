@@ -17,3 +17,4 @@
 - Added optional video file upload field to video project admin.
 - Prepared Django backend for Render deployment with dynamic host trust and port binding.
 - Added Vercel frontend and Railway backend deployment configuration.
+- Fixed Railway monorepo deployment commands for backend root directory builds.

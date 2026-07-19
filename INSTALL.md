@@ -33,14 +33,16 @@ Legacy Netlify and Render configuration files are kept for compatibility.
 
 Frontend deployment uses `vercel.json`. Import the GitHub repository in Vercel
 with the project root left as the repository root, then configure this
-environment variable:
+environment variable. The value must include `https://` and end with `/api`.
 
 ```text
 VITE_API_BASE_URL=https://<your-railway-backend-domain>/api
 ```
 
-Backend deployment uses `railway.json`. Configure these environment variables
-in Railway:
+Backend deployment uses the root `railway.json`. In Railway service settings,
+set Root Directory to `/backend` and Config File Path to `/railway.json`; this
+lets build and start commands run directly inside the Django backend directory.
+Configure these environment variables in Railway:
 
 ```text
 DJANGO_DEBUG=False
