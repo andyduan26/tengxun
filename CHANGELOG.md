@@ -24,3 +24,4 @@
 - Switched Railway configuration to backend subdirectory deployment with runtime.txt.
 - Removed explicit Railway build builder configuration to allow native backend detection.
 - Added Dockerfile-based Railway backend deployment to avoid Nixpacks pip issues.
+- Updated Railway startup flow and frontend API default for production Vercel/Railway integration.

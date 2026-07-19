@@ -105,7 +105,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 CORS_ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173",
+    "http://localhost:5173,http://127.0.0.1:5173,https://tengxun-five.vercel.app",
 )
 CORS_ALLOWED_ORIGINS = [
     origin.strip()
@@ -122,6 +122,7 @@ if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
 if RAILWAY_PUBLIC_DOMAIN:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_PUBLIC_DOMAIN}")
+CSRF_TRUSTED_ORIGINS.append("https://tengxun-five.vercel.app")
 
 REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [

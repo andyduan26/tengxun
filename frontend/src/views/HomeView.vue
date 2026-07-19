@@ -5,9 +5,10 @@ import { fallbackVideoProjects } from "@/data/fallbackVideoProjects";
 import AppLayout from "@/layouts/AppLayout.vue";
 
 
-const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+const DEFAULT_API_BASE_URL = "https://tengxun-production.up.railway.app/api";
+const configuredApiBaseUrl = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
 const API_BASE_URL = configuredApiBaseUrl.includes("placeholder-backend")
-  ? ""
+  ? DEFAULT_API_BASE_URL
   : configuredApiBaseUrl;
 const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, "");
 
